@@ -48,7 +48,7 @@
     "\n"\
     "AUTHOR\n"\
     "\tWritten by Remy Oukaour <remy.oukaour@gmail.com>.\n"\
-    "\tMemory safety optimizations: xplshn at <github.com/xplshn>.\n"\
+    "\tMemory safety optimizations: by xplshn at <github.com/xplshn>.\n"\
     "\n"\
     "COPYRIGHT\n"\
     "\tCopyright (C) 2012-2016 Remy Oukaour <http://www.remyoukaour.com>.\n"\
