@@ -1,5 +1,8 @@
 # `ascii85`
 
+####### This is the original source code: https://raw.githubusercontent.com/roukaour/ascii85/master/ascii85.c
+####### Check the diff if you are interested in the details of this fork.
+
 `ascii85` is a command-line program for encoding and decoding files using the
 [Ascii85](https://en.wikipedia.org/wiki/Ascii85) algorithm. Ascii85 encodes
 groups of four bytes using five printable ASCII characters from a set of 85.
