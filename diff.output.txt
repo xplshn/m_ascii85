@@ -1,143 +1,125 @@
-diff -wdBdia ascii85.c m_ascii85.c
+# File generated with: diff -wdBdia ascii85.c m_ascii85.c
 --- ascii85.c
 +++ m_ascii85.c
-@@ -1,27 +1,3 @@
--/*
-- * ascii85 - Ascii85 encode/decode data and print to standard output
-- *
-- * Copyright (C) 2012-2016 Remy Oukaour <http://www.remyoukaour.com>.
-- *
-- * Permission is hereby granted, free of charge, to any person obtaining a copy
-- * of this software and associated documentation files (the "Software"), to deal
-- * in the Software without restriction, including without limitation the rights
-- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-- * copies of the Software, and to permit persons to whom the Software is
-- * furnished to do so, subject to the following conditions:
-- *
-- * The above copyright notice and this permission notice shall be included in
-- * all copies or substantial portions of the Software.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-- * THE SOFTWARE.
-- */
--
+@@ -22,6 +22,9 @@
+  * THE SOFTWARE.
+  */
+
++/* Source of the original code  :  https://raw.githubusercontent.com/roukaour/ascii85/master/ascii85.c   *\
++\* This version's source        :  https://raw.githubusercontent.com/xplshn/m_ascii85/master/m_ascii85.c */
++
  #include <stdio.h>
  #include <stdlib.h>
  #include <stdint.h>
-@@ -72,6 +48,7 @@
- 	"\n"\
- 	"AUTHOR\n"\
- 	"\tWritten by Remy Oukaour <remy.oukaour@gmail.com>.\n"\
+@@ -72,6 +75,7 @@
+        "\n"\
+        "AUTHOR\n"\
+        "\tWritten by Remy Oukaour <remy.oukaour@gmail.com>.\n"\
 +    "\tMemory safety optimizations: by xplshn at <github.com/xplshn>.\n"\
- 	"\n"\
- 	"COPYRIGHT\n"\
- 	"\tCopyright (C) 2012-2016 Remy Oukaour <http://www.remyoukaour.com>.\n"\
-@@ -83,7 +60,8 @@
- 
+        "\n"\
+        "COPYRIGHT\n"\
+        "\tCopyright (C) 2012-2016 Remy Oukaour <http://www.remyoukaour.com>.\n"\
+@@ -83,7 +87,8 @@
+
  int getc_nospace(FILE *f) {
- 	int c;
--	while (isspace(c = getc(f)));
+        int c;
+-       while (isspace(c = getc(f)));
 +    while (isspace(c = getc(f)))
 +        ;
- 	return c;
+        return c;
  }
- 
-@@ -101,11 +79,9 @@
- 	char out[5];
- 	if (tuple == 0 && count == 4) {
- 		putc_wrap('z', wrap, plen);
--	}
--	else if (tuple == 0x20202020 && count == 4 && y_abbr) {
+
+@@ -101,11 +106,9 @@
+        char out[5];
+        if (tuple == 0 && count == 4) {
+                putc_wrap('z', wrap, plen);
+-       }
+-       else if (tuple == 0x20202020 && count == 4 && y_abbr) {
 +    } else if (tuple == 0x20202020 && count == 4 && y_abbr) {
- 		putc_wrap('y', wrap, plen);
--	}
--	else {
+                putc_wrap('y', wrap, plen);
+-       }
+-       else {
 +    } else {
- 		for (i = 0; i < 5; i++) {
- 			out[i] = tuple % 85 + '!';
- 			tuple /= 85;
-@@ -135,11 +111,13 @@
- 		c = getc(fp);
- 		if (c != EOF) {
- 			tuple |= ((unsigned int)c) << ((3 - count++) * 8);
--			if (count < 4) continue;
--		}
--		else if (count == 0) break;
+                for (i = 0; i < 5; i++) {
+                        out[i] = tuple % 85 + '!';
+                        tuple /= 85;
+@@ -135,11 +138,13 @@
+                c = getc(fp);
+                if (c != EOF) {
+                        tuple |= ((unsigned int)c) << ((3 - count++) * 8);
+-                       if (count < 4) continue;
+-               }
+-               else if (count == 0) break;
 +            if (count < 4)
 +                continue;
 +        } else if (count == 0)
 +            break;
- 		encode_tuple(tuple, count, wrap, &len, y_abbr);
--		if (c == EOF) break;
+                encode_tuple(tuple, count, wrap, &len, y_abbr);
+-               if (c == EOF) break;
 +        if (c == EOF)
 +            break;
- 		tuple = 0;
- 		count = 0;
- 	}
-@@ -156,10 +134,10 @@
- 		c = getc_nospace(fp);
- 		if (c == '<') {
- 			c = getc_nospace(fp);
--			if (c == '~') break;
+                tuple = 0;
+                count = 0;
+        }
+@@ -156,10 +161,10 @@
+                c = getc_nospace(fp);
+                if (c == '<') {
+                        c = getc_nospace(fp);
+-                       if (c == '~') break;
 +            if (c == '~')
 +                break;
- 			ungetc(c, fp);
--		}
--		else if (c == EOF) {
+                        ungetc(c, fp);
+-               }
+-               else if (c == EOF) {
 +        } else if (c == EOF) {
- 			eprintf(PROGRAM_NAME ": missing <~\n");
- 			exit(1);
- 		}
-@@ -195,7 +173,8 @@
- 			break;
- 		}
- 		if (c < '!' || c > 'u') {
--			if (ignore_garbage) continue;
+                        eprintf(PROGRAM_NAME ": missing <~\n");
+                        exit(1);
+                }
+@@ -195,7 +200,8 @@
+                        break;
+                }
+                if (c < '!' || c > 'u') {
+-                       if (ignore_garbage) continue;
 +            if (ignore_garbage)
 +                continue;
- 			eprintf(PROGRAM_NAME ": invalid character '%c'\n", c);
- 			exit(1);
- 		}
-@@ -209,10 +188,12 @@
+                        eprintf(PROGRAM_NAME ": invalid character '%c'\n", c);
+                        exit(1);
+                }
+@@ -209,10 +215,12 @@
  }
- 
+
  int main(int argc, char *argv[]) {
--	int opt, long_optind;
--	int decode = 0, ignore_garbage = 0, delims = 1, wrap = 76, y_abbr = 0;
+-       int opt, long_optind;
+-       int decode = 0, ignore_garbage = 0, delims = 1, wrap = 76, y_abbr = 0;
 +    int opt, decode = 0, ignore_garbage = 0, delims = 1, wrap = 76, y_abbr = 0;
- 	FILE *fp = stdin;
--	char *opts = "dinw:yh";
+        FILE *fp = stdin;
+-       char *opts = "dinw:yh";
 +
 +    char *opts = malloc((strlen("dinw:yh") + 1) * sizeof(char));
 +    strcpy(opts, "dinw:yh");
 +
- 	struct option long_opts[] = {
- 		{"decode", no_argument, NULL, 'd'},
- 		{"ignore-garbage", no_argument, NULL, 'i'},
-@@ -220,17 +201,30 @@
- 		{"wrap", required_argument, NULL, 'w'},
- 		{"y-abbr", no_argument, NULL, 'y'},
- 		{"help", no_argument, NULL, 'h'},
--		{NULL, no_argument, NULL, 0}
--	};
+        struct option long_opts[] = {
+                {"decode", no_argument, NULL, 'd'},
+                {"ignore-garbage", no_argument, NULL, 'i'},
+@@ -220,17 +228,30 @@
+                {"wrap", required_argument, NULL, 'w'},
+                {"y-abbr", no_argument, NULL, 'y'},
+                {"help", no_argument, NULL, 'h'},
+-               {NULL, no_argument, NULL, 0}
+-       };
 +        {NULL, no_argument, NULL, 0}};
 +
- 	opterr = 0;
--	while ((opt = getopt_long(argc, argv, opts, long_opts, &long_optind)) != -1) {
+        opterr = 0;
+-       while ((opt = getopt_long(argc, argv, opts, long_opts, &long_optind)) != -1) {
 +
 +    while ((opt = getopt(argc, argv, opts)) != -1) {
- 		switch (opt) {
--			case 'd': decode = 1; break;
--			case 'i': ignore_garbage = 1; break;
--			case 'n': delims = 0; break;
--			case 'w': sscanf(optarg, "%d", &wrap); break;
--			case 'y': y_abbr = 1; break;
--			case 'h': printf(HELP_TEXT); exit(0);
+                switch (opt) {
+-                       case 'd': decode = 1; break;
+-                       case 'i': ignore_garbage = 1; break;
+-                       case 'n': delims = 0; break;
+-                       case 'w': sscanf(optarg, "%d", &wrap); break;
+-                       case 'y': y_abbr = 1; break;
+-                       case 'h': printf(HELP_TEXT); exit(0);
 +        case 'd':
 +            decode = 1;
 +            break;
@@ -156,52 +138,52 @@ diff -wdBdia ascii85.c m_ascii85.c
 +        case 'h':
 +            printf(HELP_TEXT);
 +            exit(0);
- 			case '?':
- 				eprintf(PROGRAM_NAME ": ");
- 				if (strchr("w", optopt) != NULL)
-@@ -239,28 +233,39 @@
- 					eprintf("invalid option -- %c\n", optopt);
- 				eprintf(USAGE_TEXT);
- 				exit(1);
--			default: break;
+                        case '?':
+                                eprintf(PROGRAM_NAME ": ");
+                                if (strchr("w", optopt) != NULL)
+@@ -239,28 +260,39 @@
+                                        eprintf("invalid option -- %c\n", optopt);
+                                eprintf(USAGE_TEXT);
+                                exit(1);
+-                       default: break;
 +        default:
 +            break;
- 		}
- 	}
+                }
+        }
 +
- 	if (optind == argc - 1 && strcmp(argv[optind], "-")) {
- 		fp = fopen(argv[optind], "rb");
- 		if (fp == NULL) {
--			eprintf(PROGRAM_NAME ": %s: %s\n", argv[optind], strerror(errno));
+        if (optind == argc - 1 && strcmp(argv[optind], "-")) {
+                fp = fopen(argv[optind], "rb");
+                if (fp == NULL) {
+-                       eprintf(PROGRAM_NAME ": %s: %s\n", argv[optind], strerror(errno));
 +            perror(PROGRAM_NAME);
- 			exit(1);
- 		}
--	}
--	else if (optind > argc) {
+                        exit(1);
+                }
+-       }
+-       else if (optind > argc) {
 +    } else if (optind > argc) {
- 		eprintf(PROGRAM_NAME ": too many operands or wrong operand order\n");
- 		eprintf(USAGE_TEXT);
- 		exit(1);
- 	}
--	setbuf(fp, NULL);
--	if (wrap < 1) wrap = 0;
+                eprintf(PROGRAM_NAME ": too many operands or wrong operand order\n");
+                eprintf(USAGE_TEXT);
+                exit(1);
+        }
+-       setbuf(fp, NULL);
+-       if (wrap < 1) wrap = 0;
 +
 +    setvbuf(stdout, NULL, _IOFBF, 4096); // Buffered I/O for stdout
 +
 +    if (wrap < 1)
 +        wrap = 0;
- 	if (decode)
- 		ascii85_decode(fp, delims, ignore_garbage);
- 	else
- 		ascii85_encode(fp, delims, wrap, y_abbr);
+        if (decode)
+                ascii85_decode(fp, delims, ignore_garbage);
+        else
+                ascii85_encode(fp, delims, wrap, y_abbr);
 +
- 	fflush(stdout);
+        fflush(stdout);
 +
 +    // Memory cleanup
 +    free(opts);
 +    if (fp != stdin) {
- 	fclose(fp);
+        fclose(fp);
 +    }
 +
- 	return 0;
+        return 0;
  }
