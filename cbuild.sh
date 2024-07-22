@@ -51,7 +51,7 @@ case "$1" in
 "" | "build")
     require "$CC"
     log "Using CC to build \"$(basename "$BASE")\""
-    "$CC" -std=c99 ./m_ascii85.c -o ./m_ascii85 || log_error "\"$CC\" command failed" && log "Build process completed"
+    "$CC" -std=c99 ./m_ascii85.c -o ./m_ascii85 || log_error "\"$CC\" command failed"
     ;;
 "clean")
     shift
